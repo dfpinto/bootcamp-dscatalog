@@ -7,9 +7,10 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -64,5 +65,12 @@ public class CategoryService {
 		} catch (DataIntegrityViolationException e) {
 			throw new DataBaseException("Integrity violation. Id " + id);
 		}
+	}
+
+	@Transactional(readOnly = true)
+	public Page<CategoryDTO> findAllPaged(PageRequest pageRequest) {
+		Page<Category> list = repositoryCategory.findAll(pageRequest);
+		
+		return list.map(x -> new CategoryDTO(x));
 	}
 }
