@@ -31,6 +31,7 @@ import com.devsuperior.dscatalog.dto.ProductDTO;
 import com.devsuperior.dscatalog.entities.Product;
 import com.devsuperior.dscatalog.factories.Factory;
 import com.devsuperior.dscatalog.services.ProductService;
+import com.devsuperior.dscatalog.services.exceptions.DataBaseException;
 import com.devsuperior.dscatalog.services.exceptions.ResourceNotFoundException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -51,11 +52,13 @@ public class ProductResorceTests {
 	private ProductDTO productDTO;
 	private Long existingId;
 	private Long nonExistingId;
+	private Long dependentId;
 
 	@BeforeEach
 	void setUp() throws Exception {
 		existingId = 1L;
 		nonExistingId = 2L;
+		dependentId = 3L;
 		product = Factory.createProduct();
 		productDTO = Factory.createProductDTO();
 		page = new PageImpl<>(List.of(productDTO));
@@ -66,6 +69,7 @@ public class ProductResorceTests {
 		Mockito.when(productService.update(nonExistingId, productDTO)).thenThrow(ResourceNotFoundException.class);
 		Mockito.doNothing().when(productService).delete(existingId);
 		Mockito.doThrow(ResourceNotFoundException.class).when(productService).delete(nonExistingId);
+		Mockito.doThrow(DataBaseException.class).when(productService).delete(dependentId);
 		Mockito.when(productService.insert(productDTO)).thenReturn(productDTO);
 	}
 
@@ -124,6 +128,12 @@ public class ProductResorceTests {
 	public void deleteShouldReturnNotFoundWhenIdDosNotExists() throws Exception {
 		ResultActions result = mockMvc.perform(delete("/products/{id}", nonExistingId));
 		result.andExpect(status().isNotFound());
+	}
+
+	@Test
+	public void deleteShouldReturnNotFoundWhenIdDependentExists() throws Exception {
+		ResultActions result = mockMvc.perform(delete("/products/{id}", dependentId));
+		result.andExpect(status().isBadRequest());
 	}
 
 	@Test
