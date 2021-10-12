@@ -5,14 +5,23 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+
 import com.devsuperior.dscatalog.entities.User;
 
 public class UserDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private Long id;
+	
+	@NotBlank(message = "Campo obrigatório")
 	private String firstName;
+	
+	@NotBlank(message = "Campo obrigatório")
 	private String lastName;
+	
+	@Email(message = "Informar um email válido")
 	private String email;
 	private Set<RoleDTO> roles = new HashSet<>();
 	
