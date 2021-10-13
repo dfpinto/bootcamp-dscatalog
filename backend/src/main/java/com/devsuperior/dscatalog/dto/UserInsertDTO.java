@@ -2,12 +2,15 @@ package com.devsuperior.dscatalog.dto;
 
 import java.io.Serializable;
 
-public class UserPasswordDTO extends UserDTO implements Serializable{
+import com.devsuperior.dscatalog.services.validation.UserInsertValid;
+
+@UserInsertValid
+public class UserInsertDTO extends UserDTO implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	private String password;
 	
-	public UserPasswordDTO() {
+	public UserInsertDTO() {
 		super();
 	}
 
