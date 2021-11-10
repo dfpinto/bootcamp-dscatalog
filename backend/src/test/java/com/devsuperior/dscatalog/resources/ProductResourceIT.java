@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import com.devsuperior.dscatalog.dto.ProductDTO;
 import com.devsuperior.dscatalog.factories.Factory;
+import com.devsuperior.dscatalog.tests.TokenUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootTest
@@ -26,11 +27,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class ProductResourceIT {
 
 	@Autowired
+	private TokenUtil tokenUtil;
+	
+	@Autowired
 	private MockMvc mockMvc;
 	
 	@Autowired
 	private ObjectMapper objMapper;
 	
+	private String userName;
+	private String password;
 	private Long existingId;
 	private Long nonExistingId;
 	private Long countTotalProductDTO;
@@ -38,6 +44,10 @@ public class ProductResourceIT {
 
 	@BeforeEach
 	private void setUp() throws Exception {
+		
+		userName = "maria@gmail.com";
+		password = "123456";
+		
 		existingId = 1L;
 		nonExistingId = 1000L;
 		countTotalProductDTO = 25L;
@@ -58,9 +68,13 @@ public class ProductResourceIT {
 
 	@Test
 	public void updateShouldReturnProductDTOWhenIdExists() throws Exception {
+		
+		String accessToken = tokenUtil.obtainAccessToken(mockMvc, userName, password);
+				
 		String expectedName = productDTO.getName();
 		String expectedDescription = productDTO.getDescription();
 		ResultActions result = mockMvc.perform(put("/products/{id}",existingId)
+				.header("Authorization", "Bearer " + accessToken)
 				.accept(MediaType.APPLICATION_JSON)
 				.content(objMapper.writeValueAsString(productDTO))
 				.contentType(MediaType.APPLICATION_JSON)
@@ -73,7 +87,10 @@ public class ProductResourceIT {
 
 	@Test
 	public void updateShouldReturnNotFoundWhenIdDoesNotExists() throws Exception {
+		String accessToken = tokenUtil.obtainAccessToken(mockMvc, userName, password);
+		
 		ResultActions result = mockMvc.perform(put("/products/{id}",nonExistingId)
+				.header("Authorization", "Bearer " + accessToken)
 				.accept(MediaType.APPLICATION_JSON)
 				.content(objMapper.writeValueAsString(productDTO))
 				.contentType(MediaType.APPLICATION_JSON)
