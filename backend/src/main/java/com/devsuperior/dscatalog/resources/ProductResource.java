@@ -30,13 +30,35 @@ public class ProductResource {
 	ProductService serviceProduct;
 	
 	@GetMapping
-	public ResponseEntity<Page<ProductDTO>> findAllPaged(Pageable pageable
-			, @RequestParam(value = "categoryId", defaultValue = "0") Integer categoryId) {
-		Page<ProductDTO> list = serviceProduct.findAllPaged(pageable, categoryId); 
+	public ResponseEntity<Page<ProductDTO>> findAllPagedFilter(Pageable pageable
+			, @RequestParam(value = "categoryId", defaultValue = "0") Integer categoryId 
+			, @RequestParam(value = "name", defaultValue = "") String name)
+	{
+		Page<ProductDTO> list = serviceProduct.findAllPagedFilter(pageable, categoryId, name.trim()); 
 		
 		return ResponseEntity.ok(list);
 	}
-	
+
+	/*
+	@GetMapping
+	public ResponseEntity<Page<ProductDTO>> findAllPagedFilter2(Pageable pageable
+			, @RequestParam(value = "categoryId", defaultValue = "0") Long categoryId 
+			, @RequestParam(value = "name", defaultValue = "") String name)
+	{
+		Page<ProductDTO> list = serviceProduct.findAllPagedFilter2(pageable, categoryId, name.trim()); 
+		
+		return ResponseEntity.ok(list);
+	}
+	*/
+
+	@GetMapping(value = "/nativequery")
+	public ResponseEntity<Page<ProductDTO>> findNativeQuery(Pageable pageable){
+		Page<ProductDTO> list = serviceProduct.findNativeQuery(pageable); 
+		
+		return ResponseEntity.ok(list);
+		
+	}
+
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<ProductDTO> findById(@PathVariable Long id){
 		ProductDTO dto = serviceProduct.findById(id); 

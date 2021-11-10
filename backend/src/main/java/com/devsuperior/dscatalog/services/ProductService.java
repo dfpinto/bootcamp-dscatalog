@@ -1,5 +1,6 @@
 package com.devsuperior.dscatalog.services;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -74,13 +75,35 @@ public class ProductService {
 	}
 
 	@Transactional(readOnly = true)
-	public Page<ProductDTO> findAllPaged(Pageable pageable, Integer categoryId) {
+	public Page<ProductDTO> findAllPaged(Pageable pageable) {
+		Page<Product> list = repositoryProduct.findAll(pageable);
+		
+		return list.map(x -> new ProductDTO(x, x.getCategories()));
+	}
+
+	@Transactional(readOnly = true)
+	public Page<ProductDTO> findAllPagedFilter(Pageable pageable, Integer categoryId, String name) {
 		//Category category = (categoryId == 0) ? null : repositoryCategory.getById(categoryId);
-		Page<Product> list = repositoryProduct.findAllPaged(pageable, categoryId);
+		Page<Product> list = repositoryProduct.findAllPagedFilter(pageable, categoryId, name);
+		
+		return list.map(x -> new ProductDTO(x, x.getCategories()));
+	}
+
+	@Transactional(readOnly = true)
+	public Page<ProductDTO> findAllPagedFilter2(Pageable pageable, Long categoryId, String name) {
+		List<Category> categories = (categoryId == 0) ? null : Arrays.asList(repositoryCategory.getById(categoryId));
+		Page<Product> list = repositoryProduct.findAllPagedFilter2(pageable, categories, name);
 		
 		return list.map(x -> new ProductDTO(x));
 	}
-	
+
+	@Transactional(readOnly = true)
+	public Page<ProductDTO> findNativeQuery(Pageable pageable) {
+		Page<Product> list = repositoryProduct.findNativeQuery(pageable);
+		
+		return list.map(x -> new ProductDTO(x, x.getCategories()));
+	}
+
 	private void copyProductDtoToProduct(ProductDTO dto, Product entity) {
 		entity.setName(dto.getName());
 		entity.setDescription(dto.getDescription());

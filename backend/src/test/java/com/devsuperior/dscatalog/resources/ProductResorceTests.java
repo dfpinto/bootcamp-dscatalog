@@ -62,7 +62,7 @@ public class ProductResorceTests {
 		product = Factory.createProduct();
 		productDTO = Factory.createProductDTO();
 		page = new PageImpl<>(List.of(productDTO));
-		Mockito.when(productService.findAllPaged(ArgumentMatchers.any(), 0)).thenReturn(page);
+		Mockito.when(productService.findAllPaged(ArgumentMatchers.any())).thenReturn(page);
 		Mockito.when(productService.findById(existingId)).thenReturn(productDTO);
 		Mockito.when(productService.findById(nonExistingId)).thenThrow(ResourceNotFoundException.class);
 		Mockito.when(productService.update(existingId, productDTO)).thenReturn(productDTO);

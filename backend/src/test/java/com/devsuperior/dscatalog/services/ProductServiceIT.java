@@ -51,7 +51,7 @@ public class ProductServiceIT {
 	
 	@Test
 	public void findAllPagedShouldReturnPageProductDTO() {
-		Page<ProductDTO> page = productService.findAllPaged(PageRequest.of(0, 10), 0);
+		Page<ProductDTO> page = productService.findAllPaged(PageRequest.of(0, 10));
 		Assertions.assertFalse(page.isEmpty());
 		Assertions.assertEquals(0, page.getNumber());
 		Assertions.assertEquals(10, page.getSize());
@@ -60,7 +60,7 @@ public class ProductServiceIT {
 
 	@Test
 	public void findAllPagedShouldReturnSortedPageWhenSortByName() {
-		Page<ProductDTO> page = productService.findAllPaged(PageRequest.of(0, 10, Sort.by("name")), 0);
+		Page<ProductDTO> page = productService.findAllPaged(PageRequest.of(0, 10, Sort.by("name")));
 		Assertions.assertFalse(page.isEmpty());
 		Assertions.assertEquals("Macbook Pro", page.getContent().get(0).getName());
 		Assertions.assertEquals("PC Gamer", page.getContent().get(1).getName());
