@@ -3,7 +3,7 @@ name: HelloWorld
 on:
   push:
     branches:
-      - 'main'
+      - 'master'
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -11,4 +11,3 @@ jobs:
     steps:
       - name: Printing Hello World
         run: echo "Hello World!"
-        
