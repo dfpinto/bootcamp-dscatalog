@@ -1,9 +1,9 @@
 import Navbar from 'components/Navbar';
 import Home from 'pages/Home';
 import Catalog from 'pages/Catalog';
-import Admin from 'components/Admin';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import ProductDetails from 'pages/ProductDetails';
+import Admin from 'pages/Admin';
 
 const Routes = () => {
   return (
