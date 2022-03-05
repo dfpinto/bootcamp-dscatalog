@@ -1,22 +1,26 @@
 import { ReactComponent as ArrowIcon } from 'assets/images/arrow.svg';
 import axios from 'axios';
 import ProductPrice from 'components/ProductPrice';
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import { Product } from 'types/products';
-import { isThisTypeNode } from 'typescript';
 import { BASE_URL } from 'util/requests';
 import './style.css';
 
+type UrlParams = {
+   productId: string;
+}
+
 const ProductDetails = () => {
 
-  // FORMA INCORRETA
-  let product: Product;
+  const {productId} = useParams<UrlParams>();
+  const [product, setProduct] = useState<Product>();
 
-  // FORMA INCORRETA
-  axios.get(BASE_URL + "/products/2")
-  .then(response => {
-       console.log(response.data)
+  useEffect(() => {
+    axios.get(`${BASE_URL}/products/${productId}`).then((response) => {
+      setProduct(response.data);
     });
+  }, [productId]);
 
   return (
     <div className="product-details-container">
@@ -31,19 +35,19 @@ const ProductDetails = () => {
           <div className="col-xl-6">
             <div className="img-container">
               <img
-                src="https://raw.githubusercontent.com/devsuperior/dscatalog-resources/master/backend/img/2-big.jpg"
-                alt="Nome do Produto"
+                src={product?.imgUrl}
+                alt={product?.name}
               />
             </div>
             <div className="name-price-container">
-              <h2>Nome do Produto</h2>
-              <ProductPrice price={2998.99} />
+              <h2>{product?.name}</h2>
+              {product && <ProductPrice price={product?.price} />}
             </div>
           </div>
           <div className="col-xl-6">
             <div className="description-container">
               <h3>Descrição do Produto</h3>
-              <p>descrição do pruduto detalhamento</p>
+              <p>{product?.description}</p>
             </div>
           </div>
         </div>
