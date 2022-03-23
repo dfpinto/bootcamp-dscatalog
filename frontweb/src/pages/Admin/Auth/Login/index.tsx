@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import ButtonIcon from 'components/ButtonIcon';
 import { useForm } from 'react-hook-form';
 import './styles.css';
-import { RequestBackendLogin } from 'util/requests';
+import { getAuthData, RequestBackendLogin, saveAuthData } from 'util/requests';
 import { useState } from 'react';
 
 type FormData = {
@@ -16,6 +16,9 @@ const Login = () => {
   const {register, handleSubmit, formState:{errors}} = useForm<FormData>();
   const onSubmit = (formData: FormData) => {
     RequestBackendLogin(formData).then(response => {
+      saveAuthData(response.data);
+      const authData = getAuthData();
+      console.log('Token gerado: ' + authData.access_token);
       console.log('SUCESSO', response);
       setHasError(false);
     }).catch(error => {

@@ -1,6 +1,18 @@
 import axios from 'axios';
 import qs from 'qs';
 
+type LoginResponse = {
+
+  access_token: string;
+  token_type: string;
+  expires_in: number;
+  scope: string;
+  userFirstName: string;
+  id: number;
+}
+
+const tokenKey = "authData";
+
 export const BASE_URL =
   process.env.REACT_APP_BASE_URL ?? 'http://localhost:8080';
 
@@ -25,3 +37,12 @@ export const RequestBackendLogin = (loginData: LoginData) => {
 
   return axios({method:'POST', baseURL: BASE_URL, url: '/oauth/token', data, headers});
 };
+
+export const saveAuthData = ( obj: LoginResponse) => {
+  localStorage.setItem(tokenKey, JSON.stringify(obj));
+};
+
+export const getAuthData = () => {
+  const str = localStorage.getItem(tokenKey) ?? '{}';
+  return JSON.parse(str)  as LoginResponse;
+}
