@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig } from 'axios';
+import jwtDecode from 'jwt-decode';
 import qs from 'qs';
 import history from './history';
 
@@ -10,6 +11,14 @@ type LoginResponse = {
   userFirstName: string;
   id: number;
 };
+
+type Role = 'ROLE_OPRATOR' | 'ROLE_ADMIN';
+
+type TokenData = {
+  exp: number;
+  user_name: string;
+  authorities: Role[];
+}
 
 const tokenKey = 'authData';
 
@@ -80,3 +89,12 @@ axios.interceptors.response.use(function (response) {
   }
   return Promise.reject(error);
 });
+
+export const getTokenData = () : TokenData | undefined => {
+  try {
+    return jwtDecode(getAuthData().access_token) as TokenData;
+  }
+  catch(error){
+    return undefined;
+  }
+}
