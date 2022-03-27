@@ -2,15 +2,15 @@ import { ReactComponent as MainImage } from 'assets/images/main-image.svg';
 import './styles.css';
 import ButtonIcon from 'components/ButtonIcon';
 import { Link } from 'react-router-dom';
-import { getTokenData, isAuthenticated } from 'util/requests';
+import TestChildren from 'components/TestChildren';
 
 function Home() {
   return (
     <div className="home-container">
-
-      <h1>{getTokenData()?.user_name}</h1>
-      <h2>{isAuthenticated() ? 'Autenticado': 'Não autenticado'}</h2>
-
+      <TestChildren price={123.45}>
+        <h2>Conteudo 1</h2>
+        <h2>Conteudo 2</h2>
+      </TestChildren>
       <div className="base-card home-card">
         <div className="home-content-container">
           <div>
