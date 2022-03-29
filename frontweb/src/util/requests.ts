@@ -14,7 +14,7 @@ type LoginResponse = {
 
 type Role = 'ROLE_OPRATOR' | 'ROLE_ADMIN';
 
-type TokenData = {
+export type TokenData = {
   exp: number;
   user_name: string;
   authorities: Role[];
@@ -97,6 +97,10 @@ export const getTokenData = () : TokenData | undefined => {
   catch(error){
     return undefined;
   }
+}
+
+export const removeTokenData = () => {
+  localStorage.removeItem(tokenKey);
 }
 
 export const isAuthenticated = () : boolean => {
