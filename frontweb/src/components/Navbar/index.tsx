@@ -81,10 +81,10 @@ function Navbar() {
             </li>
           </ul>
         </div>
-        <div>
+        <div className="nav-login-logout">
           {authData.authenticated ? (
             <>
-              <span>{authData.tokenData?.user_name}</span>
+              <span className="nav-username">{authData.tokenData?.user_name}</span>
               <a href="#logoff" onClick={handleLogoff}>
                 LOGOFF
               </a>
