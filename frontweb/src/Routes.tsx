@@ -1,7 +1,7 @@
 import Navbar from 'components/Navbar';
 import Home from 'pages/Home';
 import Catalog from 'pages/Catalog';
-import { Redirect, Route, Router, Switch } from 'react-router-dom';
+import { Redirect, Route, Router, Switch  } from 'react-router-dom';
 import ProductDetails from 'pages/ProductDetails';
 import Admin from 'pages/Admin';
 import Auth from 'pages/Admin/Auth';
