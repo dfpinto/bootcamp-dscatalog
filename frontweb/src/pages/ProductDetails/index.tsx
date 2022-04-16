@@ -1,10 +1,10 @@
 import { ReactComponent as ArrowIcon } from 'assets/images/arrow.svg';
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import ProductPrice from 'components/ProductPrice';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Product } from 'types/products';
-import { BASE_URL } from 'util/requests';
+import { BASE_URL, requestBackend } from 'util/requests';
 import ProductDetailsInfo from './ProductDetailsInfo';
 import ProductDetailsLoader from './ProductDetailsLoader';
 import './style.css';
@@ -19,9 +19,12 @@ const ProductDetails = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    const params: AxiosRequestConfig = {
+      method: 'GET',
+      url: `/products/${productId}`,
+    };
     setIsLoading(true);
-    axios
-      .get(`${BASE_URL}/products/${productId}`)
+    requestBackend(params)
       .then((response) => {
         setProduct(response.data);
       })
@@ -41,7 +44,9 @@ const ProductDetails = () => {
         </Link>
         <div className="row">
           <div className="col-xl-6">
-            {isLoading ? <ProductDetailsInfo/> :
+            {isLoading ? (
+              <ProductDetailsInfo />
+            ) : (
               <>
                 <div className="img-container">
                   <img src={product?.imgUrl} alt={product?.name} />
@@ -51,15 +56,17 @@ const ProductDetails = () => {
                   {product && <ProductPrice price={product?.price} />}
                 </div>
               </>
-            }
+            )}
           </div>
           <div className="col-xl-6">
-            {isLoading ? <ProductDetailsLoader/> :
+            {isLoading ? (
+              <ProductDetailsLoader />
+            ) : (
               <div className="description-container">
                 <h3>Descrição do Produto</h3>
                 <p>{product?.description}</p>
               </div>
-            }
+            )}
           </div>
         </div>
       </div>
