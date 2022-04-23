@@ -1,29 +1,55 @@
 import { AxiosRequestConfig } from 'axios';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { Product } from 'types/products';
 import { requestBackend } from 'util/requests';
 import './style.css';
+type UrlParans = {
+    productId: string;
+}
 
 const Form = () => {
+  const { productId } = useParams<UrlParans>();
+  const isEditing = (productId !== "create");
+
   const history = useHistory();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setValue
   } = useForm<Product>();
+
+  useEffect(() => {
+    if (isEditing) {
+        requestBackend({url: `/products/${productId}`, withCredentials: true})
+          .then((response) => {
+            const product = response.data as Product;
+            setValue('name', product.name);
+            setValue('description', product.description);
+            setValue('date', product.date);
+            setValue('categories', product.categories);
+            setValue('price', product.price);
+            setValue('imgUrl', product.imgUrl);
+          })
+          .catch((error) => {
+            console.log('ERRO', error.response);
+          });  
+    }
+  },[productId, setValue, isEditing]);
 
   const onSubmit = (formData: Product) => {
     const data = {
       ...formData,
-      imgUrl:
+      imgUrl: isEditing ? formData.imgUrl :
         'https://raw.githubusercontent.com/devsuperior/dscatalog-resources/master/backend/img/1-big.jpg',
-      categories: [{ id: 1, name: '' }],
+      categories: isEditing ? formData.categories : [{ id: 1, name: '' }],
     };
     const config: AxiosRequestConfig = {
-      method: 'POST',
-      url: '/products',
+      method: isEditing ? 'PUT':'POST',
+      url: isEditing ? `/products/${productId}`: '/products',
       //data: FormData,
       data, // ou data: data
       withCredentials: true,
