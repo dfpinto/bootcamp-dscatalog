@@ -4,14 +4,15 @@ import { useForm } from 'react-hook-form';
 import { useHistory, useParams } from 'react-router-dom';
 import { Product } from 'types/products';
 import { requestBackend } from 'util/requests';
+import Select from 'react-select';
 import './style.css';
 type UrlParans = {
-    productId: string;
-}
+  productId: string;
+};
 
 const Form = () => {
   const { productId } = useParams<UrlParans>();
-  const isEditing = (productId !== "create");
+  const isEditing = productId !== 'create';
 
   const history = useHistory();
 
@@ -19,37 +20,38 @@ const Form = () => {
     register,
     handleSubmit,
     formState: { errors },
-    setValue
+    setValue,
   } = useForm<Product>();
 
   useEffect(() => {
     if (isEditing) {
-        requestBackend({url: `/products/${productId}`, withCredentials: true})
-          .then((response) => {
-            const product = response.data as Product;
-            setValue('name', product.name);
-            setValue('description', product.description);
-            setValue('date', product.date);
-            setValue('categories', product.categories);
-            setValue('price', product.price);
-            setValue('imgUrl', product.imgUrl);
-          })
-          .catch((error) => {
-            console.log('ERRO', error.response);
-          });  
+      requestBackend({ url: `/products/${productId}`, withCredentials: true })
+        .then((response) => {
+          const product = response.data as Product;
+          setValue('name', product.name);
+          setValue('description', product.description);
+          setValue('date', product.date);
+          setValue('categories', product.categories);
+          setValue('price', product.price);
+          setValue('imgUrl', product.imgUrl);
+        })
+        .catch((error) => {
+          console.log('ERRO', error.response);
+        });
     }
-  },[productId, setValue, isEditing]);
+  }, [productId, setValue, isEditing]);
 
   const onSubmit = (formData: Product) => {
     const data = {
       ...formData,
-      imgUrl: isEditing ? formData.imgUrl :
-        'https://raw.githubusercontent.com/devsuperior/dscatalog-resources/master/backend/img/1-big.jpg',
+      imgUrl: isEditing
+        ? formData.imgUrl
+        : 'https://raw.githubusercontent.com/devsuperior/dscatalog-resources/master/backend/img/1-big.jpg',
       categories: isEditing ? formData.categories : [{ id: 1, name: '' }],
     };
     const config: AxiosRequestConfig = {
-      method: isEditing ? 'PUT':'POST',
-      url: isEditing ? `/products/${productId}`: '/products',
+      method: isEditing ? 'PUT' : 'POST',
+      url: isEditing ? `/products/${productId}` : '/products',
       //data: FormData,
       data, // ou data: data
       withCredentials: true,
@@ -90,6 +92,13 @@ const Form = () => {
                 <div className="invalid-feedback d-block">
                   {errors.name?.message}
                 </div>
+              </div>
+              <div className="product-crud-form-input">
+                <Select
+                  options={[{ value: 'chocolate', label: 'chocolate' }]}
+                  isMulti
+                  classNamePrefix='product-crud-select'
+                />
               </div>
               <div className="product-crud-form-input">
                 <input
