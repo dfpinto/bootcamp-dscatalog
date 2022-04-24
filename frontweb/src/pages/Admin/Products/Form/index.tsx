@@ -1,17 +1,20 @@
 import { AxiosRequestConfig } from 'axios';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useHistory, useParams } from 'react-router-dom';
 import { Product } from 'types/products';
 import { requestBackend } from 'util/requests';
 import Select from 'react-select';
 import './style.css';
+import { Category } from 'types/category';
+
 type UrlParans = {
   productId: string;
 };
 
 const Form = () => {
   const { productId } = useParams<UrlParans>();
+  const [ selectCategories, setSelectCategories ] = useState<Category[]>([]);
   const isEditing = productId !== 'create';
 
   const history = useHistory();
@@ -22,6 +25,12 @@ const Form = () => {
     formState: { errors },
     setValue,
   } = useForm<Product>();
+
+  useEffect(() => {
+    requestBackend({url:'/categories'}).then((response) => {
+        setSelectCategories(response.data.content);
+    })
+  }, []);
 
   useEffect(() => {
     if (isEditing) {
@@ -95,9 +104,11 @@ const Form = () => {
               </div>
               <div className="product-crud-form-input">
                 <Select
-                  options={[{ value: 'chocolate', label: 'chocolate' }]}
+                  options={selectCategories}
                   isMulti
                   classNamePrefix='product-crud-select'
+                  getOptionLabel={(category) => category.name}
+                  getOptionValue={(category) => String(category.id)}
                 />
               </div>
               <div className="product-crud-form-input">
