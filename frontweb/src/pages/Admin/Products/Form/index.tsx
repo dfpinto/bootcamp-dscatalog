@@ -1,6 +1,6 @@
 import { AxiosRequestConfig } from 'axios';
 import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { useHistory, useParams } from 'react-router-dom';
 import { Product } from 'types/products';
 import { requestBackend } from 'util/requests';
@@ -14,7 +14,7 @@ type UrlParans = {
 
 const Form = () => {
   const { productId } = useParams<UrlParans>();
-  const [ selectCategories, setSelectCategories ] = useState<Category[]>([]);
+  const [selectCategories, setSelectCategories] = useState<Category[]>([]);
   const isEditing = productId !== 'create';
 
   const history = useHistory();
@@ -24,12 +24,13 @@ const Form = () => {
     handleSubmit,
     formState: { errors },
     setValue,
+    control,
   } = useForm<Product>();
 
   useEffect(() => {
-    requestBackend({url:'/categories'}).then((response) => {
-        setSelectCategories(response.data.content);
-    })
+    requestBackend({ url: '/categories' }).then((response) => {
+      setSelectCategories(response.data.content);
+    });
   }, []);
 
   useEffect(() => {
@@ -80,7 +81,7 @@ const Form = () => {
   };
 
   return (
-    <div className="product-crud-form-card">
+    <div className="product-crud-container">
       <div className="base-card product-crud-form-card">
         <h1 className="product-crud-form-title">DADOS DO PRODUTO</h1>
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -103,13 +104,26 @@ const Form = () => {
                 </div>
               </div>
               <div className="product-crud-form-input">
-                <Select
-                  options={selectCategories}
-                  isMulti
-                  classNamePrefix='product-crud-select'
-                  getOptionLabel={(category) => category.name}
-                  getOptionValue={(category) => String(category.id)}
+                <Controller
+                  name="categories"
+                  rules={{ required: true }}
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      {...field}
+                      options={selectCategories}
+                      isMulti
+                      classNamePrefix='product-crud-select'
+                      getOptionLabel={(category) => category.name}
+                      getOptionValue={(category) => String(category.id)}
+                    />
+                  )}
                 />
+                {errors.categories && (
+                  <div className="invalid-feedback d-block">
+                    Campo obrigatório
+                  </div>
+                )}
               </div>
               <div className="product-crud-form-input">
                 <input
@@ -128,7 +142,7 @@ const Form = () => {
                 </div>
               </div>
             </div>
-            <div className="col-lg-6 product-crud-form-input">
+            <div className="col-lg-6">
               <textarea
                 rows={10}
                 {...register('description', {
