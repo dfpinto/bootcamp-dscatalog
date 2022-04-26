@@ -55,11 +55,7 @@ const Form = () => {
     const config: AxiosRequestConfig = {
       method: isEditing ? 'PUT' : 'POST',
       url: isEditing ? `/products/${productId}` : '/products',
-<<<<<<< HEAD
       data: formData,
-=======
-      data: FormData,
->>>>>>> 4fd844879ba44b70ee3bda4c224a2a280b7f24bd
       withCredentials: true,
     };
 
