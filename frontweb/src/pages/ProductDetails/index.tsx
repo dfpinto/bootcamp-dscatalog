@@ -1,10 +1,10 @@
 import { ReactComponent as ArrowIcon } from 'assets/images/arrow.svg';
-import axios, { AxiosRequestConfig } from 'axios';
+import { AxiosRequestConfig } from 'axios';
 import ProductPrice from 'components/ProductPrice';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Product } from 'types/products';
-import { BASE_URL, requestBackend } from 'util/requests';
+import { requestBackend } from 'util/requests';
 import ProductDetailsInfo from './ProductDetailsInfo';
 import ProductDetailsLoader from './ProductDetailsLoader';
 import './style.css';

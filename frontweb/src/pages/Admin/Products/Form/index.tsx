@@ -5,8 +5,9 @@ import { useHistory, useParams } from 'react-router-dom';
 import { Product } from 'types/products';
 import { requestBackend } from 'util/requests';
 import Select from 'react-select';
-import './style.css';
 import { Category } from 'types/category';
+import CurrencyInput from 'react-currency-input-field';
+import './style.css';
 
 type UrlParans = {
   productId: string;
@@ -52,10 +53,11 @@ const Form = () => {
   }, [productId, setValue, isEditing]);
 
   const onSubmit = (formData: Product) => {
+    const data = {...formData, price: String(formData.price).replace(',','.')};
     const config: AxiosRequestConfig = {
       method: isEditing ? 'PUT' : 'POST',
       url: isEditing ? `/products/${productId}` : '/products',
-      data: formData,
+      data,
       withCredentials: true,
     };
 
@@ -138,17 +140,25 @@ const Form = () => {
                 </div>
               </div>
               <div className="product-crud-form-input">
-                <input
-                  {...register('price', {
-                    required: 'Campo obrigatório',
-                  })}
-                  type="text"
-                  className={`form-control base-input ${
-                    errors.price ? 'is-invalid' : ''
-                  }`}
-                  placeholder="Preço"
-                  name="price"
-                />
+                  <Controller
+                    name='price'
+                    control={control}
+                    rules={{required: 'Campo obrigatório'}}
+                    render={({field}) => (
+                        <CurrencyInput
+                            placeholder='Preço'
+                            className={`form-control base-input ${
+                                errors.price ? 'is-invalid' : ''
+                              }`}
+                            disableGroupSeparators={true}          
+                            value={field.value}
+                            onValueChange={field.onChange}
+                            decimalScale={2}
+                            decimalsLimit={2}
+                            disableAbbreviations={true}
+                        />
+                    )}
+                  />
                 <div className="invalid-feedback d-block">
                   {errors.price?.message}
                 </div>
