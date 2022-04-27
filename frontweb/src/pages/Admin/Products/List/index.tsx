@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { Product } from 'types/products';
 import { SpringPage } from 'types/vendor/spring';
 import { requestBackend } from 'util/requests';
-import './style.css';
+import './styles.css';
 
 const List = () => {
   const [page, setPage] = useState<SpringPage<Product>>();

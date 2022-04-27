@@ -7,7 +7,7 @@ import { requestBackend } from 'util/requests';
 import Select from 'react-select';
 import { Category } from 'types/category';
 import CurrencyInput from 'react-currency-input-field';
-import './style.css';
+import './styles.css';
 
 type UrlParans = {
   productId: string;
