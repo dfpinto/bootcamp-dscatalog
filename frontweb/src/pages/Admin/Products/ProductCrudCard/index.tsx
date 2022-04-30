@@ -47,7 +47,7 @@ const ProductCrudCard = ({ product, onDelete }: Props) => {
           EXCLUIR
         </button>
         <Link to={`/admin/products/${product.id}`}>
-          <button className="btn btn-outline-secundary product-crud-card-button">
+          <button className="btn btn-outline-secondary product-crud-card-button">
             EDITAR
           </button>
         </Link>
