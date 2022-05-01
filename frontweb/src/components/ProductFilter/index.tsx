@@ -8,13 +8,23 @@ import './styles.css';
 
 type ProductFilterData = {
   name: string;
-  category: Category;
+  category: Category | null;
 };
 
 const ProductFilter = () => {
   const [selectCategories, setSelectCategories] = useState<Category[]>([]);
 
-  const { register, handleSubmit, control } = useForm<ProductFilterData>();
+  const { register, handleSubmit, setValue, getValues, control } = useForm<ProductFilterData>();
+
+  const handleFormClear = () => {
+    setValue('name','');
+    setValue('category', null);
+  }
+
+  const handleChangeCategory = (value : Category) => {
+    setValue('category', value);
+    console.log('ENVIOU', getValues().name, getValues().category);
+  }
 
   useEffect(() => {
     requestBackend({ url: '/categories' }).then((response) => {
@@ -51,6 +61,7 @@ const ProductFilter = () => {
                   {...field}
                   options={selectCategories}
                   isClearable
+                  onChange={value => handleChangeCategory(value as Category)}
                   placeholder="Categoria"
                   classNamePrefix="product-filter-select"
                   getOptionLabel={(category) => category.name}
@@ -59,7 +70,7 @@ const ProductFilter = () => {
               )}
             />
           </div>
-          <button className="btn btn-outline-secondary btn-product-filter-clear">LIMPAR <span className="btn-product-filter-word">FILTRO</span></button>
+          <button onClick={handleFormClear} className="btn btn-outline-secondary btn-product-filter-clear">LIMPAR <span className="btn-product-filter-word">FILTRO</span></button>
         </div>
       </form>
     </div>
