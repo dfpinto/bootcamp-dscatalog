@@ -6,12 +6,16 @@ import { requestBackend } from 'util/requests';
 import Select from 'react-select';
 import './styles.css';
 
-type ProductFilterData = {
+export type ProductFilterData = {
   name: string;
   category: Category | null;
 };
 
-const ProductFilter = () => {
+type Props = {
+  onSubmitFilter: (data: ProductFilterData) => void;
+}
+
+const ProductFilter = ( {onSubmitFilter} : Props) => {
   const [selectCategories, setSelectCategories] = useState<Category[]>([]);
 
   const { register, handleSubmit, setValue, getValues, control } = useForm<ProductFilterData>();
@@ -23,18 +27,22 @@ const ProductFilter = () => {
 
   const handleChangeCategory = (value : Category) => {
     setValue('category', value);
-    console.log('ENVIOU', getValues().name, getValues().category);
+    const obj : ProductFilterData = {
+      name: getValues('name'),
+      category : getValues('category')
+    }
+    onSubmitFilter(obj);
   }
+  
+  const onSubmit = (formData: ProductFilterData) => {
+    onSubmitFilter(formData);
+  };
 
   useEffect(() => {
     requestBackend({ url: '/categories' }).then((response) => {
       setSelectCategories(response.data.content);
-    });
-  }, []);
-
-  const onSubmit = (formData: ProductFilterData) => {
-    console.log('envio', formData);
-  };
+    });  
+  }, []);  
 
   return (
     <div className="base-card product-filter-container">
