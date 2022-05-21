@@ -19,9 +19,9 @@ const Pagination = ({forcePage, pageCount, rangeDisplay, onChange}:Props) => {
       containerClassName="pagination-container"
       pageLinkClassName="pagination-item"
       breakClassName="pagination-item"
-      previousLabel={<ArrowIcon />}
-      nextLabel={<ArrowIcon />}
-      previousClassName="arrow-preview"
+      previousLabel={<div data-testid="arrow-previous"><ArrowIcon /></div>}
+      nextLabel={<div data-testid="arrow-next"><ArrowIcon /></div>}
+      previousClassName="arrow-previous"
       nextClassName="arrow-next"
       activeLinkClassName="pagination-link-active"
       disabledClassName="arrow-inactive"
