@@ -68,4 +68,38 @@ describe('Product form create tests', () => {
             expect(messages).toHaveLength(5);
         })
     });    
+
+    test('should clear validation messages when filling out the form correctly', async () => {
+        render(
+            <Router history={history}>
+                <Form />
+            </Router>
+        );
+
+        const submitButton = screen.getByRole('button', {name: /salvar/i});
+        userEvent.click(submitButton);
+        
+        await waitFor(() => {
+            const messages = screen.getAllByText("Campo obrigatório");
+            expect(messages).toHaveLength(5);
+        })
+
+        const nameInput = screen.getByTestId("name");
+        const priceInput = screen.getByTestId("price");
+        const imgUrlInput = screen.getByTestId("imgUrl");
+        const descriptionInput = screen.getByTestId("description");
+        const categoriesInput = screen.getByLabelText("Categorias");
+
+        await selectEvent.select(categoriesInput,['Eletrônicos','Computadores']);
+        userEvent.type(nameInput, 'Computador');
+        userEvent.type(priceInput,'5000.12');
+        userEvent.type(imgUrlInput,'https://a-static.mlcdn.com.br/618x463/computador-completo-intel-core-i3-6gb-hd-500gb-wifi-monitor-19-5-led-hdmi-corpc/3greentechnology/18880/34a41e963d43a04d9a4e79c271995245.jpg');
+        userEvent.type(descriptionInput,'PC Positivo 2000');
+        userEvent.click(submitButton);
+
+        await waitFor(() => {
+            const messages = screen.queryAllByText("Campo obrigatório");
+            expect(messages).toHaveLength(0);
+        })
+    });    
 })
