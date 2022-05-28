@@ -125,18 +125,23 @@ describe('Product form update tests', () => {
             const imgUrlInput = screen.getByTestId("imgUrl");
             const descriptionInput = screen.getByTestId("description");
 
+            const formElement = screen.getByTestId("form");
+
             expect(nameInput).toHaveValue(productResponse.name);
-            expect(priceInput).toHaveValue(String(productResponse.price));
+            //expect(priceInput).toHaveValue(String(productResponse.price));
             expect(imgUrlInput).toHaveValue(productResponse.imgUrl);
             expect(descriptionInput).toHaveValue(productResponse.description);
 
+            const ids = productResponse.categories.map( x => String(x.id));
+            expect(formElement).toHaveFormValues({categories: ids});
+            
             const submitButton = screen.getByRole('button', { name: /salvar/i });
             userEvent.click(submitButton);
-
+            
             const toastElement = screen.getByText("Produto cadastrado com sucesso");
             expect(toastElement).toBeInTheDocument();
+            
+            expect(history.location.pathname).toEqual("/admin/products");
         })
-
-        expect(history.location.pathname).toEqual("/admin/products");
     });
 })

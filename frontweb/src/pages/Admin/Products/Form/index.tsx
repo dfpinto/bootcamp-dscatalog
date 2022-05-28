@@ -80,7 +80,7 @@ const Form = () => {
     <div className="product-crud-container">
       <div className="base-card product-crud-form-card">
         <h1 className="product-crud-form-title">DADOS DO PRODUTO</h1>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} data-testid="form">
           <div className="row">
             <div className="col-lg-6">
               <div className="product-crud-form-input">
