@@ -128,7 +128,7 @@ describe('Product form update tests', () => {
             const formElement = screen.getByTestId("form");
 
             expect(nameInput).toHaveValue(productResponse.name);
-            //expect(priceInput).toHaveValue(String(productResponse.price));
+            expect(priceInput).toHaveValue(String(productResponse.price));
             expect(imgUrlInput).toHaveValue(productResponse.imgUrl);
             expect(descriptionInput).toHaveValue(productResponse.description);
 
