@@ -80,7 +80,7 @@ const Form = () => {
     <div className="product-crud-container">
       <div className="base-card product-crud-form-card">
         <h1 className="product-crud-form-title">DADOS DO PRODUTO</h1>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} data-testid="form">
           <div className="row">
             <div className="col-lg-6">
               <div className="product-crud-form-input">
@@ -94,12 +94,14 @@ const Form = () => {
                   }`}
                   placeholder="Nome do produto"
                   name="name"
+                  data-testid="name"
                 />
                 <div className="invalid-feedback d-block">
                   {errors.name?.message}
                 </div>
               </div>
               <div className="product-crud-form-input">
+                <label htmlFor="categories" className="d-none">Categorias</label>
                 <Controller
                   name="categories"
                   rules={{ required: true }}
@@ -112,6 +114,7 @@ const Form = () => {
                       classNamePrefix='product-crud-select'
                       getOptionLabel={(category) => category.name}
                       getOptionValue={(category) => String(category.id)}
+                      inputId="categories"
                     />
                   )}
                 />
@@ -136,6 +139,7 @@ const Form = () => {
                   }`}
                   placeholder="URL da imagem do produto"
                   name="imgUrl"
+                  data-testid="imgUrl"
                 />
                 <div className="invalid-feedback d-block">
                   {errors.imgUrl?.message}
@@ -147,7 +151,8 @@ const Form = () => {
                     control={control}
                     rules={{required: 'Campo obrigatório'}}
                     render={({field}) => (
-                        <CurrencyInput
+                      <CurrencyInput
+                            data-testid="price"
                             placeholder='Preço'
                             className={`form-control base-input ${
                                 errors.price ? 'is-invalid' : ''
@@ -177,6 +182,7 @@ const Form = () => {
                 }`}
                 placeholder="Descrição"
                 name="description"
+                data-testid="description"
               ></textarea>
               <div className="invalid-feedback d-block">
                 {errors.description?.message}
